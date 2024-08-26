@@ -1,0 +1,81 @@
+
+
+--Create IN453 DB
+CREATE DATABASE IN453;
+ 
+--Use DB
+USE IN453;
+
+
+--Create IN453A table
+CREATE TABLE IN453A(
+sequence INT,
+source VARCHAR(255),
+destination VARCHAR(255),
+domain VARCHAR(255),
+length INT,
+info VARCHAR(255)
+);
+	
+
+--Create IN453B table
+CREATE TABLE IN453B(
+first_name VARCHAR(255),
+last_name VARCHAR(255),
+email VARCHAR(255),
+source VARCHAR(255),
+destination VARCHAR(255)
+);
+
+
+--Create IN453C table
+CREATE TABLE IN453C(
+AppID VARCHAR(255),
+AppName VARCHAR(255),
+AppVersion VARCHAR(255),
+source VARCHAR(255),
+destination VARCHAR(255),
+DigSig VARCHAR(255)
+);
+
+
+--Load IN453A.csv Into table
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/IN453A.csv'
+INTO TABLE IN453A 
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;			
+
+
+--Load IN453B.csv Into table
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/IN453B.csv'
+INTO TABLE IN453B 
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;	
+
+--Load IN453C.csv Into table
+LOAD DATA INFILE 'C:/ProgramData/MySQL/MySQL Server 8.0/Uploads/IN453C.csv'
+INTO TABLE IN453C 
+FIELDS TERMINATED BY ','
+ENCLOSED BY '"'
+LINES TERMINATED BY '\n'
+IGNORE 1 ROWS;	
+
+--Create Users
+CREATE USER 'IN453A'@'locahost'IDENTIFIED BY 'passwordA';
+CREATE USER 'IN453B'@'locahost'IDENTIFIED BY 'passwordB';
+CREATE USER 'IN453C'@'locahost'IDENTIFIED BY 'passwordC';
+
+--Grant access for IN453A to all 3 tables
+GRANT SELECT ON IN453.IN453A TO 'IN453A'@'localhost';
+GRANT SELECT ON IN453.IN453B TO 'IN453A'@'localhost';
+GRANT SELECT ON IN453.IN453C TO 'IN453A'@'localhost';
+
+--Grant access for IN453B to only IN453B table
+GRANT SELECT ON IN453.IN453B TO 'IN453B'@'localhost';
+
+--Grant access for IN453C to only IN453C table
+GRANT SELECT ON IN453.IN453C TO 'IN453C'@'localhost';
