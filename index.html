@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <title>IN453M5 Competency Assessment 2</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1"> 
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+      button {
+        padding: 10px 10px;
+      }
+      div {
+        margin: 20px 10px;
+        color: blue;
+      }
+    </style>  
+</head>
+
+  <body>
+    <h1>Login</h1>
+    <form id="LoginForm">
+        <label for="server">Server:</label>
+        <input type="text" id="server" name="server" required><br><br>
+
+        <label for="database">Database:</label>
+        <input type="text" id="database" name="database" required><br><br>
+
+        <label for="user">User:</label>
+        <input type="text" id="user" name="user" required><br><br>
+        
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        
+        <button type="button" id="loginButton">Login</button>
+    </form>
+    <div id="loginResult"></div>
+
+    <h1>IN453M2 Get Row Count for IN453A</h1>
+    <button id="fetchButtonA">Get Row Count for IN453A</button>
+    <div id="resultA"></div>
+
+    <h1>IN453M2 Get Row Count for IN453C</h1>
+    <button id="fetchButtonC">Get Row Count for IN453C</button>
+    <div id="resultC"></div>
+   
+    
+    <h1>IN453M2 Full Names from IN453B</h1>
+    <button id="fetchNamesButton">Fetch Full Names</button>
+    <div id="fullNames"></div>
+
+    <script>
+      //Login
+      $(document).ready(function(){
+        $('#loginButton').click(function(){
+            var server = $('#server').val();
+            var database = $('#database').val();
+            var user = $('#user').val();
+            var password = $('#password').val();
+
+            //validation that user enter something in each field
+            if(!server || !database || !user || !password){
+              $("#loginResult").html("All fields are required.");
+              return;
+            }    
+
+            //
+            $.post('http://localhost:5503/connect', {
+                server: server,
+                database: database,
+                user: user,
+                password: password
+            }, function(data) {
+                $("#loginResult").html(data.message);
+            }).fail(function() {
+
+                $("#loginResult").html("Error logging in.");
+            });
+        });
+        
+
+        //Table IN453A
+        $('#fetchButtonA').click(function(){
+            var tableName = 'IN453A';
+            $.get(`http://localhost:5503/rowcount/${tableName}`, function(data){
+                $("#resultA").html(data.response);
+            }).fail(function() {
+              $("#resultA").html("Error fetching data.");
+          });
+        });
+        
+        //Table IN453C
+        $('#fetchButtonC').click(function(){
+            var tableName = 'IN453C';
+            $.get(`http://localhost:5503/rowcount/${tableName}`, function(data){
+                $("#resultC").html(data.response);
+            }).fail(function() {
+              $("#resultC").html("Error fetching data.");
+          });
+        });
+
+        //Fullnames
+        $('#fetchNamesButton').click(function(){
+          var tableName = 'IN453B'; 
+            $.get(`http://localhost:5503/fullnames/${tableName}`, function(data){
+                $("#fullNames").html(data.response.join('<br>'));
+            }).fail(function() {
+            $("#fullNames").html("Error fetching data.");
+        });
+      });
+    });
+    </script>
+  </body>
+</html>
